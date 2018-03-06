@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Conductor
-import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RestoreViewOnCreateController
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
@@ -16,8 +16,12 @@ import kotlinx.android.synthetic.main.controller_second.view.*
 
 const val TAG = "ConductorLC"
 
-class HomeController : Controller() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
+class HomeController : RestoreViewOnCreateController() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup,
+        savedViewState: Bundle?
+    ): View {
         val view = inflater.inflate(R.layout.controller_home, container, false)
         view.showNextButton.setOnClickListener {
             router.pushController(
@@ -36,14 +40,21 @@ class HomeController : Controller() {
         val childRouter = getChildRouter(view.childRouterContainer, null)
         if (!childRouter.hasRootController()) {
             childRouter.setRoot(
-                RouterTransaction.with(ChildController())
+                RouterTransaction.with(ChildController()).pushChangeHandler(
+                    FadeChangeHandler()
+                ).popChangeHandler(FadeChangeHandler())
             )
         }
     }
 }
 
-class ChildController : Controller() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
+class ChildController : RestoreViewOnCreateController() {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup,
+        savedViewState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.controller_child, container, false)
     }
 
@@ -54,8 +65,12 @@ class ChildController : Controller() {
     }
 }
 
-class SecondController : Controller() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
+class SecondController : RestoreViewOnCreateController() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup,
+        savedViewState: Bundle?
+    ): View {
         val view = inflater.inflate(R.layout.controller_second, container, false)
         view.goBackButton.setOnClickListener {
             Log.d(TAG, "Pressing Back")
