@@ -2,7 +2,6 @@ package com.example.conductorlifecycle
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,7 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import kotlinx.android.synthetic.main.controller_home.view.*
 import kotlinx.android.synthetic.main.controller_second.view.*
-
-const val TAG = "ConductorLC"
+import timber.log.Timber
 
 class HomeController : RestoreViewOnCreateController() {
     override fun onCreateView(
@@ -34,9 +32,9 @@ class HomeController : RestoreViewOnCreateController() {
     }
 
     override fun onAttach(view: View) {
-        Log.d(TAG, "Home before attach")
+        Timber.d("Home before attach")
         super.onAttach(view)
-        Log.d(TAG, "Home after attach")
+        Timber.d("Home after attach")
         val childRouter = getChildRouter(view.childRouterContainer, null)
         if (!childRouter.hasRootController()) {
             childRouter.setRoot(
@@ -59,9 +57,9 @@ class ChildController : RestoreViewOnCreateController() {
     }
 
     override fun onAttach(view: View) {
-        Log.d(TAG, "Child before attach")
+        Timber.d("Child before attach")
         super.onAttach(view)
-        Log.d(TAG, "Child after attach")
+        Timber.d("Child after attach")
     }
 }
 
@@ -73,7 +71,7 @@ class SecondController : RestoreViewOnCreateController() {
     ): View {
         val view = inflater.inflate(R.layout.controller_second, container, false)
         view.goBackButton.setOnClickListener {
-            Log.d(TAG, "Pressing Back")
+            Timber.d("Pressing Back")
             router.handleBack()
         }
         return view
@@ -88,6 +86,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Timber.plant(Timber.DebugTree())
 
         router =
             Conductor.attachRouter(this, findViewById(R.id.controllerContainer), savedInstanceState)
