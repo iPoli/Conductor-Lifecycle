@@ -32,6 +32,7 @@ class HomeController : RestoreViewOnCreateController() {
     }
 
     override fun onAttach(view: View) {
+
         Timber.d("Home before attach")
         super.onAttach(view)
         Timber.d("Home after attach")
